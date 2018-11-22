@@ -154,7 +154,7 @@ class Template
                     </a>
                 </li>
                 <li>
-                    <a href='payments.php'>
+                    <a href='tipoUsuario.php'>
                         <i class=\"ti-money\"></i>
                         <p>Perfil de usuário</p>
                     </a>

@@ -8,47 +8,50 @@
 
 class tipoUsuario
 {
-    private $idAutor;
-    private $nome;
+    private $idTipoUsuario;
+    private $Descricao;
 
-    public function __construct($idAutor, $nome)
+    /**
+     * tipoUsuario constructor.
+     * @param $idTipoUsuario
+     * @param $Descricao
+     */
+    public function __construct($idTipoUsuario, $Descricao)
     {
-        $this->idAutor = $idAutor;
-        $this->nome = $nome;
+        $this->idTipoUsuario = $idTipoUsuario;
+        $this->Descricao = $Descricao;
     }
 
     /**
      * @return mixed
      */
-    public function getIdAutor()
+    public function getIdTipoUsuario()
     {
-        return $this->idAutor;
+        return $this->idTipoUsuario;
     }
 
     /**
-     * @param mixed $idAutor
+     * @param mixed $idTipoUsuario
      */
-    public function setIdAutor($idAutor): void
+    public function setIdTipoUsuario($idTipoUsuario)
     {
-        $this->idAutor = $idAutor;
+        $this->idTipoUsuario = $idTipoUsuario;
     }
 
     /**
      * @return mixed
      */
-    public function getNome()
+    public function getDescricao()
     {
-        return $this->nome;
+        return $this->Descricao;
     }
 
     /**
-     * @param mixed $nome
+     * @param mixed $Descricao
      */
-    public function setNome($nome): void
+    public function setDescricao($Descricao)
     {
-        $this->nome = $nome;
+        $this->Descricao = $Descricao;
     }
-
-
 
 }

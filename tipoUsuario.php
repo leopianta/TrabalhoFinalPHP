@@ -1,8 +1,8 @@
 <?php
 
 require_once 'classes/template.php';
-require_once 'dao/tipoUsuarioDAO.php.php';
-require_once 'classes/tipoUsuario.php.php';
+require_once 'dao/tipoUsuarioDAO.php';
+require_once 'classes/tipoUsuario.php';
 
 $object = new tipoUsuarioDAO();
 
@@ -26,24 +26,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
 
-    $autor = new autor($id,'','');
+    $tipoUsuario = new tipoUsuario($id,'');
 
-    $resultado = $object->atualizar($autor);
-    $nome = $resultado->getNome();
+    $resultado = $object->atualizar($tipoUsuario);
+    $tipoUsuario = $resultado->getDescricao();
 }
 
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $nome != "")
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $descricao != "")
 {
-    $autor = new autor($id, $nome);
-    $msg = $object->salvar($autor);
+    $tipoUsuario = new tipoUsuario($id, $descricao);
+    $msg = $object->salvar($tipoUsuario);
     $id = null;
-    $nome = NULL;
+    $descricao = NULL;
 
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
-    $autor = new autor($id, '');
-    $msg = $object->remover($autor);
+    $tipoUsuario = new tipoUsuario($id, '');
+    $msg = $object->remover($tipoUsuario);
     $id = null;
 }
 
@@ -55,8 +55,8 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
             <div class='col-md-12'>
                 <div class='card'>
                     <div class='header'>
-                        <h4 class='title'>Cadastro de Autores</h4>
-                        <p class='category'>Cadastro de autores dos Livros!</p>
+                        <h4 class='title'>Cadastro de Perfil de Usuario</h4>
+                        <p class='category'>Cadastro de Perfil de Usuário!</p>
 
                     </div>
                     <div class='content table-responsive'>
@@ -68,10 +68,10 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             echo (isset($id) && ($id != null || $id != "")) ? $id : '';
                             ?>"/>
 
-                            Nome:
-                            <input class="form-control" type="text" name="nome" value="<?php
+                            Descrição:
+                            <input class="form-control" type="text" name="descricao" value="<?php
                             // Preenche o nome no campo nome com um valor "value"
-                            echo (isset($nome) && ($nome != null || $nome != "")) ? $nome : '';
+                            echo (isset($descricao) && ($descricao != null || $descricao != "")) ? $descricao : '';
                             ?>"/>
                             <br/>
 

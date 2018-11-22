@@ -1,15 +1,15 @@
 <?php
 
 require_once 'db/connection.php';
-require_once 'classes/autor.php';
+require_once 'classes/tipoUsuario.php';
 
 class tipoUsuarioDAO
 {
-    public function remover($autor){
+    public function remover($tipoUsuario){
         global $pdo;
         try {
-            $statement = $pdo->prepare("DELETE FROM autor WHERE idAutor = :id");
-            $statement->bindValue(":id", $autor->getIdAutor());
+            $statement = $pdo->prepare("DELETE FROM tipousuario WHERE idTipoUsuario = :id");
+            $statement->bindValue(":id", $tipoUsuario->getIdTipoUsuario());
             if ($statement->execute()) {
                 return "<script> alert('Registro foi excluído com êxito !'); </script>";
             } else {
@@ -20,16 +20,16 @@ class tipoUsuarioDAO
         }
     }
 
-    public function salvar($autor){
+    public function salvar($tipoUsuario){
         global $pdo;
         try {
-            if ($autor->getIdAutor() != "") {
-                $statement = $pdo->prepare("UPDATE autor SET nome=:nome WHERE idAutor = :id;");
-                $statement->bindValue(":id", $autor->getIdAutor());
+            if ($tipoUsuario->getIdTipoUsuario() != "") {
+                $statement = $pdo->prepare("UPDATE tipoUsuario SET descricao=:descricao WHERE idTipoUsuario = :id;");
+                $statement->bindValue(":idTipoUsuario", $tipoUsuario->getIdTipoUsuario());
             } else {
-                $statement = $pdo->prepare("INSERT INTO autor (nome) VALUES (:nome)");
+                $statement = $pdo->prepare("INSERT INTO tipoUsuario (descricao) VALUES (:descricao)");
             }
-            $statement->bindValue(":nome",$autor->getNome());
+            $statement->bindValue(":descricao",$tipoUsuario->getDescricao());
 
             //var_dump($statement->queryString);
             if ($statement->execute()) {
@@ -47,17 +47,17 @@ class tipoUsuarioDAO
     }
 
 
-    public function atualizar($autor){
+    public function atualizar($tipoUsuario){
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT idAutor, nome FROM autor WHERE idAutor = :id");
-            $statement->bindValue(":id", $autor->getIdAutor());
+            $statement = $pdo->prepare("SELECT idTipoUsuario, descricao FROM tipoUsuario WHERE idTipoUsuario = :id");
+            $statement->bindValue(":idTipoUsuario", $tipoUsuario->getIdTipoUsuario());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
-                $autor->setIdAutor($rs->idAutor);
-                $autor->setNome($rs->nome);
+                $tipoUsuario->setIdTipoUsuario($rs->idTipoUsuario);
+                $tipoUsuario->setDescricao($rs->descricao);
 
-                return $autor;
+                return $tipoUsuario;
             } else {
                 throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
             }
@@ -87,7 +87,7 @@ class tipoUsuarioDAO
         /* Instrução de consulta para paginação com MySQL */
 
 
-        $sql = "SELECT idAutor, nome FROM autor LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+        $sql = "SELECT idTipoUsuario, descricao FROM tipoUsuario LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
 
 
         $statement = $pdo->prepare($sql);
@@ -95,7 +95,7 @@ class tipoUsuarioDAO
         $dados = $statement->fetchAll(PDO::FETCH_OBJ);
 
         /* Conta quantos registos existem na tabela */
-        $sqlContador = "SELECT COUNT(*) AS total_registros FROM editora";
+        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tipoUsuario";
         $statement = $pdo->prepare($sqlContador);
         $statement->execute();
         $valor = $statement->fetch(PDO::FETCH_OBJ);
@@ -130,19 +130,19 @@ class tipoUsuarioDAO
      <thead>
        <tr style='text-transform: uppercase;' class='active'>
         <th style='text-align: center; font-weight: bolder;'>Codigo</th>
-        <th style='text-align: center; font-weight: bolder;'>Nome</th>
+        <th style='text-align: center; font-weight: bolder;'>Descricao</th>
         <th style='text-align: center; font-weight: bolder;' colspan='2'>Actions</th>
        </tr>
      </thead>
      <tbody>";
-            foreach ($dados as $autor):
+            foreach ($dados as $tipoUsuario):
 
 
                 echo "<tr>
-        <td style='text-align: center'>$autor->idAutor</td>
-        <td style='text-align: center'>$autor->nome</td>
-           <td style='text-align: center'><a href='?act=upd&id=$autor->idAutor' title='Alterar'><i class='ti-reload'></i></a></td>
-        <td style='text-align: center'><a href='?act=del&id=$autor->idAutor' title='Remover'><i class='ti-close'></i></a></td>
+        <td style='text-align: center'>$tipoUsuario->idTipoUsuario</td>
+        <td style='text-align: center'>$tipoUsuario->descricao</td>
+           <td style='text-align: center'><a href='?act=upd&id=$tipoUsuario->idTipoUsuario' title='Alterar'><i class='ti-reload'></i></a></td>
+        <td style='text-align: center'><a href='?act=del&id=$tipoUsuario->idTipoUsuario' title='Remover'><i class='ti-close'></i></a></td>
        </tr>";
             endforeach;
             echo "
