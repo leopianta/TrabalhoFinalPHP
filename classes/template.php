@@ -136,37 +136,33 @@ class Template
                     </a>
                 </li>
                 <li>
-                    <a href='functions.php'>
+                    <a href='reserva.php'>
                         <i class=\"ti-archive\"></i>
-                        <p>Function</p>
+                        <p>Reserva</p>
                     </a>
                 </li>
                 <li>
-                    <a href='subfunctions.php'>
+                    <a href='emprestimo.php'>
                         <i class=\"ti-archive\"></i>
-                        <p>Subfunction</p>
+                        <p>Emprestimo</p>
                     </a>
-                </li>
-                <li>
-                    <a href='source.php'>
-                        <i class=\"ti-folder\"></i>
-                        <p>Source</p>
-                    </a>
-                </li>
-                <li>
+                </li>";
+        //if($_SESSION['perfil'] == 0){
+        echo"<li>
                     <a href='tipoUsuario.php'>
                         <i class=\"ti-money\"></i>
                         <p>Perfil de usuário</p>
                     </a>
                 </li>";
-//        if($_SESSION['perfil'] == 0){
+        //}
+        //if($_SESSION['perfil'] == 0){
             echo"<li>
                     <a href='users.php'>
                         <i class=\"ti-user\"></i>
                         <p>Users</p>
                     </a>
                 </li>";
-//        }
+        //}
         echo"
             </ul>
         </div>
