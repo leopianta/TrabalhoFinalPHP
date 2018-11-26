@@ -70,8 +70,23 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             ?>"/>
 
                             Livro:
-                            <select class="form-control" name="livro">
-                                <option>Bukowski</option>
+                            <select class="form-control" name="fk_idLivro">
+                                <?php
+                                $query = "SELECT * FROM livro order by titulo;";
+                                $statement = $pdo->prepare($query);
+                                if ($statement->execute()) {
+                                    $result = $statement->fetchAll(PDO::FETCH_OBJ);
+                                    foreach ($result as $rs) {
+                                        if ($rs->idLivro == $fk_idLivro) {
+                                            echo "<option value='$rs->idLivro' selected>$rs->Titulo</option>";
+                                        } else {
+                                            echo "<option value='$rs->idLivro'>$rs->Titulo</option>";
+                                        }
+                                    }
+                                } else {
+                                    throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+                                }
+                                ?>
                             </select>
                             <br/>
                             <input class="btn btn-success" type="submit" value="REGISTER">

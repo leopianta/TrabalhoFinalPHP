@@ -69,9 +69,24 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             echo (isset($id) && ($id != null || $id != "")) ? $id : '';
                             ?>"/>
 
-                            Reserva:
-                            <select class="form-control" name="livro">
-                                <option>Bukowski</option>
+                            Reservas realizadas:
+                            <select class="form-control" name="fk_idLivro">
+                                <?php
+                                $query = "SELECT Titulo FROM reserva r JOIN Livro l on r.Livro_idLivro = l.idLivro order by titulo;";
+                                $statement = $pdo->prepare($query);
+                                if ($statement->execute()) {
+                                    $result = $statement->fetchAll(PDO::FETCH_OBJ);
+                                    foreach ($result as $rs) {
+                                        if ($rs->idLivro == $fk_idLivro) {
+                                            echo "<option value='$rs->idLivro' selected>$rs->Titulo</option>";
+                                        } else {
+                                            echo "<option value='$rs->idLivro'>$rs->Titulo</option>";
+                                        }
+                                    }
+                                } else {
+                                    throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+                                }
+                                ?>
                             </select>
                             <br/>
                             <input class="btn btn-success" type="submit" value="REGISTER">

@@ -17,11 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = (isset($_POST["id"]) && $_POST["id"] != null) ? $_POST["id"] : "";
     $titulo = (isset($_POST["titulo"]) && $_POST["titulo"] != null) ? $_POST["titulo"] : "";
     $ISBN = (isset($_POST["ISBN"]) && $_POST["ISBN"] != null) ? $_POST["ISBN"] : "";
-    $autores = (isset($_POST["autores"]) && $_POST["autores"] != null) ? $_POST["autores"] : "";
+    $autores = (isset($_POST["idAutor"]) && $_POST["idAutor"] != null) ? $_POST["idAutor"] : "";
     $edicao = (isset($_POST["edicao"]) && $_POST["edicao"] != null) ? $_POST["edicao"] : "";
-    $editora = (isset($_POST["editora"]) && $_POST["editora"] != null) ? $_POST["editora"] : "";
     $ano = (isset($_POST["ano"]) && $_POST["ano"] != null) ? $_POST["ano"] : "";
-    $fk_idCategoria = (isset($_POST["fk_idCategoria"]) && $_POST["fk_idCategoria"] != null) ? $_POST["fk_idCategoria"] : "";
+    $idEditora = (isset($_POST["idEditora"]) && $_POST["idEditora"] != null) ? $_POST["idEditora"] : "";
+    $idCategoria = (isset($_POST["idCategoria"]) && $_POST["idCategoria"] != null) ? $_POST["idCategoria"] : "";
 
 } else if (!isset($id)) {
     // Se não se não foi setado nenhum valor para variável $id
@@ -52,19 +52,19 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
 
 }
 
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $titulo != "" && $ISBN != "" &&
-    $autores != "" && $edicao != "" && $editora != "" && $ano != "" && $fk_idCategoria != "")
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save")
 {
-    $livro = new livro($id,$titulo, $ISBN, $autores, $edicao, $editora, $ano, $fk_idCategoria);
+    $livro = new livro($id,$titulo, $ISBN, $autores, $edicao, $idEditora, $ano, $idCategoria);
     $msg = $object->salvar($livro);
     $id = null;
     $titulo = NULL;
     $ISBN = NULL;
     $autores = NULL;
     $edicao = NULL;
-    $editora = NULL;
+    $idEditora = NULL;
     $ano = NULL;
-    $fk_idCategoria = NULL;
+    $idCategoria = NULL;
+
 
 }
 
@@ -107,10 +107,25 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             ?>"/>
                             <br/>
                             Autores:
-                            <input class="form-control" type="text" name="autores" value="<?php
-                            // Preenche o nome no campo nome com um valor "value"
-                            echo (isset($autores) && ($autores != null || $autores != "")) ? $autores : '';
-                            ?>"/>
+                            <select class="form-control" name="idAutor">
+                                <?php
+                                $query = "SELECT idAutor, Nome FROM autor Order by Nome";
+                                $statement = $pdo->prepare($query);
+                                if ($statement->execute()) {
+                                    $result = $statement->fetchAll(PDO::FETCH_OBJ);
+                                    foreach ($result as $rs) {
+                                        echo "<option value='$rs->idAutor'>$rs->Nome</option>";
+//                                        if ($rs->idCategoria == $fk_idCategoria) {
+//                                            echo "<option value='$rs->idCategoria' selected>$rs->nome</option>";
+//                                        } else {
+//                                            echo "<option value='$rs->idCategoria'>$rs->nome</option>";
+//                                        }
+                                    }
+                                } else {
+                                    throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+                                }
+                                ?>
+                            </select>
                             <br/>
 
                             Edição:
@@ -120,11 +135,27 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             ?>"/>
                             <br/>
 
+
                             Editora:
-                            <input class="form-control" type="text" name="editora" value="<?php
-                            // Preenche o nome no campo nome com um valor "value"
-                            echo (isset($editora) && ($editora != null || $editora != "")) ? $editora : '';
-                            ?>"/>
+                            <select class="form-control" name="idEditora">
+                                <?php
+                                $query = "SELECT idEditora, Nome, Sigla FROM editora order by Nome";
+                                $statement = $pdo->prepare($query);
+                                if ($statement->execute()) {
+                                    $result = $statement->fetchAll(PDO::FETCH_OBJ);
+                                    foreach ($result as $rs) {
+                                        echo "<option value='$rs->idEditora'>$rs->Nome</option>";
+//                                        if ($rs->idCategoria == $fk_idCategoria) {
+//                                            echo "<option value='$rs->idCategoria' selected>$rs->nome</option>";
+//                                        } else {
+//                                            echo "<option value='$rs->idCategoria'>$rs->nome</option>";
+//                                        }
+                                    }
+                                } else {
+                                    throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+                                }
+                                ?>
+                            </select>
                             <br/>
 
                             Ano:
@@ -135,15 +166,15 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             <br/>
 
 
-                            Categoria:
-                            <select class="form-control" name="fk_idCategoria">
+                            Categorias:
+                            <select class="form-control" name="idCategoria">
                                 <?php
-                                $query = "SELECT * FROM categoria order by Nome;";
+                                $query = "SELECT idCategoria, Nome, Descricao, Assunto FROM categoria order by Nome";
                                 $statement = $pdo->prepare($query);
                                 if ($statement->execute()) {
                                     $result = $statement->fetchAll(PDO::FETCH_OBJ);
                                     foreach ($result as $rs) {
-                                        echo "<option value='$rs->idCategoria'>$rs->nome</option>";
+                                        echo "<option value='$rs->idCategoria'>$rs->Nome</option>";
 //                                        if ($rs->idCategoria == $fk_idCategoria) {
 //                                            echo "<option value='$rs->idCategoria' selected>$rs->nome</option>";
 //                                        } else {

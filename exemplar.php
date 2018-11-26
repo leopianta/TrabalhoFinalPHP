@@ -46,7 +46,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
 
 }
 
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $quant != "" && $digital_fisico != ""
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $quant != "" && $AcervoDigitalSN != ""
     && $emprestimo_consulta != "" && $fk_idLivro != "") {
     $size = $_FILES['arquivo']['size'];
 
@@ -138,9 +138,9 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                     $result = $statement->fetchAll(PDO::FETCH_OBJ);
                                     foreach ($result as $rs) {
                                         if ($rs->idLivro == $fk_idLivro) {
-                                            echo "<option value='$rs->idLivro' selected>$rs->titulo</option>";
+                                            echo "<option value='$rs->idLivro' selected>$rs->Titulo</option>";
                                         } else {
-                                            echo "<option value='$rs->idLivro'>$rs->titulo</option>";
+                                            echo "<option value='$rs->idLivro'>$rs->Titulo</option>";
                                         }
                                     }
                                 } else {

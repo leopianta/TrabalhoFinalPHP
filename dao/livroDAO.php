@@ -25,14 +25,14 @@ class livroDAO
         global $pdo;
         try {
             if ($livro->getIdLivro() != "") {
-                $statement = $pdo->prepare("UPDATE livro SET titulo=:titulo, ISBN=:ISBN, autores=:autores, edicao=:edicao, editora=:editora, ano=:ano, fk_idCategoria=:fk_idCategoria WHERE idLivro = :id;");
+                $statement = $pdo->prepare("UPDATE livro SET titulo=:titulo, ISBN=:ISBN, Autor_idAutor=:autores, edicao=:edicao, Editora_idEditora=:editora, ano=:ano, Categoria_idCategoria=:fk_idCategoria WHERE idLivro = :id;");
                 $statement->bindValue(":id", $livro->getIdLivro());
             } else {
-                $statement = $pdo->prepare("INSERT INTO livro (titulo, ISBN, autores, edicao, editora, ano, fk_idCategoria) VALUES (:titulo, :ISBN, :autores, :edicao, :editora, :ano, :fk_idCategoria);");
+                $statement = $pdo->prepare("INSERT INTO livro (Titulo, isbn, Autor_idAutor, Edicao, Editora_idEditora, Ano, Categoria_idCategoria) VALUES (:titulo, :ISBN, :Autor_idAutor, :edicao, :editora, :ano, :fk_idCategoria);");
             }
             $statement->bindValue(":titulo",$livro->getTitulo());
             $statement->bindValue(":ISBN",$livro->getISBN());
-            $statement->bindValue(":autores",$livro->getAutores());
+            $statement->bindValue(":Autor_idAutor",$livro->getAutores());
             $statement->bindValue(":edicao",$livro->getEdicao());
             $statement->bindValue(":editora",$livro->getEditora());
             $statement->bindValue(":ano",$livro->getAno());
@@ -55,7 +55,7 @@ class livroDAO
     public function atualizar($livro){
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT idLivro, titulo, ISBN, autores, edicao, editora, ano, fk_idCategoria FROM livro WHERE idLivro = :id");
+            $statement = $pdo->prepare("SELECT idLivro, titulo, ISBN, autores, edicao, Editora_idEditora, ano, Categoria_idCategoria FROM livro WHERE idLivro = :id");
             $statement->bindValue(":id", $livro->getIdLivro());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
@@ -83,10 +83,9 @@ class livroDAO
     {
         global $pdo;
         try {
-            $statement = $pdo->prepare('SELECT titulo, ISBN, autores, edicao, editora, ano, c.nome as Categoria , e.quant as Quantidade, 
-                                                  e.digital_fisico, e.emprestimo_consulta
-                                                  FROM livro l, exemplar e, categoria c
-                                                  where e.fk_idLivro = l.idLivro and l.fk_idCategoria = c.idCategoria');
+            $statement = $pdo->prepare('SELECT * FROM livro l join 
+                                                                editora e on l.Editora_idEditora = e.idEditora JOIN
+                                                                autor a on l.Autor_idAutor = a.idAutor;');
             if ($statement->execute()) {
                 $listaLivros = $statement->fetchAll(PDO::FETCH_OBJ);
                 return $listaLivros;
@@ -119,9 +118,10 @@ class livroDAO
         /* Instrução de consulta para paginação com MySQL */
 
 
-        $sql = "SELECT f.idLivro, f.titulo, f.ISBN, f.autores, f.edicao, f.editora, f.ano, c.nome as Categoria
-        FROM livro f, categoria c
-        WHERE f.fk_idCategoria = c.idCategoria LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+        $sql = "SELECT idLivro, Titulo, Edicao, Ano, isbn, e.Nome as Editora, a.nome as Autor, c.Nome as Categoria FROM livro l join 
+                              editora e on l.Editora_idEditora = e.idEditora JOIN
+                              autor a on l.Autor_idAutor = a.idAutor JOIN
+                              categoria c on l.Categoria_idCategoria = c.idCategoria; LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
 
 
 
@@ -167,7 +167,7 @@ class livroDAO
         <th style='text-align: center; font-weight: bolder;'>Codigo</th>
         <th style='text-align: center; font-weight: bolder;'>Titulo</th>
         <th style='text-align: center; font-weight: bolder;'>ISBN</th>
-        <th style='text-align: center; font-weight: bolder;'>Autores</th>
+        <th style='text-align: center; font-weight: bolder;'>Autor</th>
         <th style='text-align: center; font-weight: bolder;'>Edição</th>
         <th style='text-align: center; font-weight: bolder;'>Ano</th>
         <th style='text-align: center; font-weight: bolder;'>Categoria</th>
@@ -180,11 +180,11 @@ class livroDAO
 
                 echo "<tr>
         <td style='text-align: center'>$livro->idLivro</td>
-        <td style='text-align: center'>$livro->titulo</td>
-        <td style='text-align: center'>$livro->ISBN</td>
-        <td style='text-align: center'>$livro->autores</td>
-        <td style='text-align: center'>$livro->edicao</td>
-         <td style='text-align: center'>$livro->ano</td>
+        <td style='text-align: center'>$livro->Titulo</td>
+        <td style='text-align: center'>$livro->isbn</td>
+        <td style='text-align: center'>$livro->Autor</td>
+        <td style='text-align: center'>$livro->Edicao</td>
+         <td style='text-align: center'>$livro->Ano</td>
          <td style='text-align: center'>$livro->Categoria</td>
         <td style='text-align: center'><a href='?act=upd&id=$livro->idLivro' title='Alterar'><i class='ti-reload'></i></a></td>
         <td style='text-align: center'><a href='?act=del&id=$livro->idLivro' title='Remover'><i class='ti-close'></i></a></td>
