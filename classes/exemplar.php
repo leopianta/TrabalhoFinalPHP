@@ -8,96 +8,109 @@
 
 class exemplar
 {
+
     private $idExemplar;
-    private $quant;
-    private $digital_fisico;
-    private $arquivo;
-    private $emprestimo_consulta;
+    private $UploadArquivo;
+    private $AcervoDigitalSN;
+    private $ExemplarQtde;
     private $fk_idLivro;
 
-
-    public function __construct($idExemplar, $quant, $digital_fisico, $arquivo, $emprestimo_consulta, $fk_idLivro)
+    /**
+     * exemplar constructor.
+     * @param $idExemplar
+     * @param $UploadArquivo
+     * @param $AcervoDigitalSN
+     * @param $ExemplarcQtde
+     * @param $fk_idLivro
+     */
+    public function __construct($idExemplar, $UploadArquivo, $AcervoDigitalSN, $ExemplarQtde, $fk_idLivro)
     {
         $this->idExemplar = $idExemplar;
-        $this->quant = $quant;
-        $this->digital_fisico = $digital_fisico;
-        $this->arquivo = $arquivo;
-        $this->emprestimo_consulta = $emprestimo_consulta;
+        $this->UploadArquivo = $UploadArquivo;
+        $this->AcervoDigitalSN = $AcervoDigitalSN;
+        $this->ExemplarcQtde = $ExemplarQtde;
         $this->fk_idLivro = $fk_idLivro;
     }
 
-
+    /**
+     * @return mixed
+     */
     public function getIdExemplar()
     {
         return $this->idExemplar;
     }
 
-
-    public function setIdExemplar($idExemplar): void
+    /**
+     * @param mixed $idExemplar
+     */
+    public function setIdExemplar($idExemplar)
     {
         $this->idExemplar = $idExemplar;
     }
 
-
-    public function getQuant()
+    /**
+     * @return mixed
+     */
+    public function getUploadArquivo()
     {
-        return $this->quant;
+        return $this->UploadArquivo;
     }
 
-
-    public function setQuant($quant): void
+    /**
+     * @param mixed $UploadArquivo
+     */
+    public function setUploadArquivo($UploadArquivo)
     {
-        $this->quant = $quant;
+        $this->UploadArquivo = $UploadArquivo;
     }
 
-
-    public function getDigitalFisico()
+    /**
+     * @return mixed
+     */
+    public function getAcervoDigitalSN()
     {
-        return $this->digital_fisico;
+        return $this->AcervoDigitalSN;
     }
 
-
-    public function setDigitalFisico($digital_fisico): void
+    /**
+     * @param mixed $AcervoDigitalSN
+     */
+    public function setAcervoDigitalSN($AcervoDigitalSN)
     {
-        $this->digital_fisico = $digital_fisico;
+        $this->AcervoDigitalSN = $AcervoDigitalSN;
     }
 
-
-    public function getArquivo()
+    /**
+     * @return mixed
+     */
+    public function getExemplarcQtde()
     {
-        return $this->arquivo;
+        return $this->ExemplarcQtde;
     }
 
-
-    public function setArquivo($arquivo): void
+    /**
+     * @param mixed $ExemplarcQtde
+     */
+    public function setExemplarQtde($ExemplarQtde)
     {
-        $this->arquivo = $arquivo;
+        $this->ExemplarcQtde = $ExemplarQtde;
     }
 
-
-    public function getEmprestimoConsulta()
-    {
-        return $this->emprestimo_consulta;
-    }
-
-
-    public function setEmprestimoConsulta($emprestimo_consulta): void
-    {
-        $this->emprestimo_consulta = $emprestimo_consulta;
-    }
-
-
+    /**
+     * @return mixed
+     */
     public function getFkIdLivro()
     {
         return $this->fk_idLivro;
     }
 
-
-    public function setFkIdLivro($fk_idLivro): void
+    /**
+     * @param mixed $fk_idLivro
+     */
+    public function setFkIdLivro($fk_idLivro)
     {
         $this->fk_idLivro = $fk_idLivro;
     }
-
 
 
 }

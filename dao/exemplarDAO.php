@@ -27,14 +27,13 @@ class exemplarDAO
                 $statement = $pdo->prepare("UPDATE exemplar SET quant=:quant, digital_fisico=:digital_fisico, arquivo=:arquivo, emprestimo_consulta=:emprestimo_consulta, fk_idLivro=:fk_idLivro WHERE idExemplar = :id;");
                 $statement->bindValue(":id", $exemplar->getIdExemplar());
             } else {
-                $statement = $pdo->prepare("INSERT INTO exemplar (quant, digital_fisico, arquivo, emprestimo_consulta, fk_idLivro) VALUES (:quant, :digital_fisico, :arquivo, :emprestimo_consulta, :fk_idLivro)");
+                $statement = $pdo->prepare("INSERT INTO exemplar (UploadArquivo, AcervoDigitalSN, Exemplarcol, Livro_idLivro) VALUES (:UploadArquivo, :AcervoDigitalSN, :Exemplarcol, :Livro_idLivro)");
             }
 
-            $statement->bindValue(":quant",$exemplar->getQuant());
-            $statement->bindValue(":digital_fisico",$exemplar->getDigitalFisico());
-            $statement->bindValue(":arquivo",$exemplar->getArquivo());
-            $statement->bindValue(":emprestimo_consulta",$exemplar->getEmprestimoConsulta());
-            $statement->bindValue(":fk_idLivro",$exemplar->getFkIdLivro());
+            $statement->bindValue(":UploadArquivo",$exemplar->getUploadArquivo());
+            $statement->bindValue(":AcervoDigitalSN",$exemplar->getAcervoDigitalSN());
+            $statement->bindValue(":ExemplarQtde",$exemplar->getExemplarQtde());
+            $statement->bindValue(":fk_idLivro",$exemplar->getfk_idLivro());
 
 
 
@@ -55,16 +54,16 @@ class exemplarDAO
     public function atualizar($exemplar){
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT idExemplar, quant, digital_fisico, arquivo, emprestimo_consulta, fk_idLivro FROM exemplar WHERE idExemplar = :id");
+            $statement = $pdo->prepare("SELECT UploadArquivo, AcervoDigitalSN, Exemplarcol, Livro_idLivro FROM exemplar WHERE idExemplar = :id");
             $statement->bindValue(":id", $exemplar->getIdExemplar());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
                 $exemplar->setIdExemplar($rs->idExemplar);
                 $exemplar->setQuant($rs->quant);
-                $exemplar->setDigitalFisico($rs->digital_fisico);
-                $exemplar->setArquivo($rs->arquivo);
-                $exemplar->setEmprestimoConsulta($rs->emprestimo_consulta);
-                $exemplar->setFkIdLivro($rs->fk_idLivro);
+                $exemplar->setAcervoDigitalSN($rs->AcervoDigitalSN);
+                $exemplar->setUploadArquivo($rs->UploadArquivo);
+                $exemplar->setExemplarQtde($rs->Exemplarcol);
+                $exemplar->setFkIdLivro($rs->Livro_idLivro);
 
 
                 return $exemplar;
