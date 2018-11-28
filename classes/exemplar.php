@@ -28,7 +28,7 @@ class exemplar
         $this->idExemplar = $idExemplar;
         $this->UploadArquivo = $UploadArquivo;
         $this->AcervoDigitalSN = $AcervoDigitalSN;
-        $this->ExemplarcQtde = $ExemplarQtde;
+        $this->ExemplarQtde = $ExemplarQtde;
         $this->fk_idLivro = $fk_idLivro;
     }
 
@@ -83,9 +83,9 @@ class exemplar
     /**
      * @return mixed
      */
-    public function getExemplarcQtde()
+    public function getExemplarQtde()
     {
-        return $this->ExemplarcQtde;
+        return $this->ExemplarQtde;
     }
 
     /**
@@ -93,7 +93,7 @@ class exemplar
      */
     public function setExemplarQtde($ExemplarQtde)
     {
-        $this->ExemplarcQtde = $ExemplarQtde;
+        $this->ExemplarQtde = $ExemplarQtde;
     }
 
     /**

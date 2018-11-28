@@ -24,18 +24,18 @@ class exemplarDAO
         global $pdo;
         try {
             if ($exemplar->getIdExemplar() != "") {
-                $statement = $pdo->prepare("UPDATE exemplar SET quant=:quant, digital_fisico=:digital_fisico, arquivo=:arquivo, emprestimo_consulta=:emprestimo_consulta, fk_idLivro=:fk_idLivro WHERE idExemplar = :id;");
+                $statement = $pdo->prepare("UPDATE exemplar SET Exemplarcol=:ExemplarQtde, AcervoDigitalSN=:AcervoDigitalSN, UploadArquivo=:UploadArquivo, Livro_idLivro=:Livro_idLivro WHERE idExemplar = :id;");
                 $statement->bindValue(":id", $exemplar->getIdExemplar());
+
             } else {
-                $statement = $pdo->prepare("INSERT INTO exemplar (UploadArquivo, AcervoDigitalSN, Exemplarcol, Livro_idLivro) VALUES (:UploadArquivo, :AcervoDigitalSN, :Exemplarcol, :Livro_idLivro)");
+                $statement = $pdo->prepare("INSERT INTO exemplar (UploadArquivo, AcervoDigitalSN, Exemplarcol, Livro_idLivro) VALUES (:UploadArquivo, :AcervoDigitalSN, :ExemplarQtde, :Livro_idLivro)");
             }
+
 
             $statement->bindValue(":UploadArquivo",$exemplar->getUploadArquivo());
             $statement->bindValue(":AcervoDigitalSN",$exemplar->getAcervoDigitalSN());
             $statement->bindValue(":ExemplarQtde",$exemplar->getExemplarQtde());
-            $statement->bindValue(":fk_idLivro",$exemplar->getfk_idLivro());
-
-
+            $statement->bindValue(":Livro_idLivro",$exemplar->getFkIdLivro());
 
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
@@ -54,12 +54,11 @@ class exemplarDAO
     public function atualizar($exemplar){
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT UploadArquivo, AcervoDigitalSN, Exemplarcol, Livro_idLivro FROM exemplar WHERE idExemplar = :id");
+            $statement = $pdo->prepare("SELECT idExemplar, UploadArquivo, AcervoDigitalSN, Exemplarcol, Livro_idLivro FROM exemplar WHERE idExemplar = :id");
             $statement->bindValue(":id", $exemplar->getIdExemplar());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
                 $exemplar->setIdExemplar($rs->idExemplar);
-                $exemplar->setQuant($rs->quant);
                 $exemplar->setAcervoDigitalSN($rs->AcervoDigitalSN);
                 $exemplar->setUploadArquivo($rs->UploadArquivo);
                 $exemplar->setExemplarQtde($rs->Exemplarcol);
@@ -98,10 +97,9 @@ class exemplarDAO
         /* Instrução de consulta para paginação com MySQL */
 
 
-        $sql = "SELECT f.idExemplar as Codigo, f.quant as Quantidade, f.digital_fisico as Digital_Fisico, 
-                  f. arquivo as Arquivo, f.emprestimo_consulta as Emprestimo_Consulta, l.titulo as TituloLivro
-                FROM exemplar f, livro l
-                WHERE f.fk_idLivro = l.idLivro LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+        $sql = "SELECT e.idExemplar, e.AcervoDigitalSN, e.UploadArquivo, e.Exemplarcol as Exemplares, l.Titulo
+                  FROM exemplar e JOIN 
+                       Livro l on e.Livro_idLivro = l.idLivro; LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
 
 
         $statement = $pdo->prepare($sql);
@@ -144,10 +142,9 @@ class exemplarDAO
      <thead>
        <tr style='text-transform: uppercase;' class='active'>
         <th style='text-align: center; font-weight: bolder;'>Codigo</th>
-        <th style='text-align: center; font-weight: bolder;'>Quantidade</th>
+        <th style='text-align: center; font-weight: bolder;'>Exemplares</th>
         <th style='text-align: center; font-weight: bolder;'>Digital ou Fisico</th>
         <th style='text-align: center; font-weight: bolder;'>Arquivo</th>
-        <th style='text-align: center; font-weight: bolder;'>Emprestimo ou Consulta</th>
         <th style='text-align: center; font-weight: bolder;'>Livro</th>
         <th style='text-align: center; font-weight: bolder;' colspan='2'>Actions</th>
        </tr>
@@ -155,20 +152,16 @@ class exemplarDAO
      <tbody>";
             foreach ($dados as $exemplar):
                 echo "<tr>
-        <td style='text-align: center'>$exemplar->Codigo</td>
-        <td style='text-align: center'>$exemplar->Quantidade</td>";
-            if ($exemplar->Digital_Fisico == 0)
+        <td style='text-align: center'>$exemplar->idExemplar</td>
+        <td style='text-align: center'>$exemplar->Exemplares</td>";
+            if ($exemplar->AcervoDigitalSN == 0)
                 echo"<td style='text-align: center'>Fisico</td>";
-            if ($exemplar->Digital_Fisico == 1)
+            if ($exemplar->AcervoDigitalSN == 1)
                 echo"<td style='text-align: center'>Digital</td>";
-                echo"<td style='text-align: center'>$exemplar->Arquivo</td>";
-            if($exemplar->Emprestimo_Consulta == 2)
-                echo "<td style='text-align: center'>Emprestimo</td>";
-            if ($exemplar->Emprestimo_Consulta == 3)
-                echo"<td style='text-align: center'>Consulta</td>";
-        echo"<td style='text-align: center'>$exemplar->TituloLivro</td>
-        <td style='text-align: center'><a href='?act=upd&id=$exemplar->Codigo' title='Alterar'><i class='ti-reload'></i></a></td>
-        <td style='text-align: center'><a href='?act=del&id=$exemplar->Codigo' title='Remover'><i class='ti-close'></i></a></td>
+                echo"<td style='text-align: center'>$exemplar->UploadArquivo</td>";
+        echo"<td style='text-align: center'>$exemplar->Titulo</td>
+        <td style='text-align: center'><a href='?act=upd&id=$exemplar->idExemplar' title='Alterar'><i class='ti-reload'></i></a></td>
+        <td style='text-align: center'><a href='?act=del&id=$exemplar->idExemplar' title='Remover'><i class='ti-close'></i></a></td>
        </tr>";
             endforeach;
             echo "

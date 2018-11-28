@@ -24,14 +24,15 @@ class reservaDAO
         global $pdo;
         try {
             if ($reserva->getIdReserva() != "") {
-                $statement = $pdo->prepare("UPDATE reserva SET Usuario_idUsuario=:idUsuario, Livro_idLivro=:idLivro, DataReserva:= DataReserva  WHERE idReserva = :id;");
+                $statement = $pdo->prepare("UPDATE reserva SET Livro_idLivro=:Livro_idLivro WHERE idReserva = :id;");
                 $statement->bindValue(":id", $reserva->getIdReserva());
             } else {
-                $statement = $pdo->prepare("INSERT INTO reserva (Usuario_idUsuario, Livro_idLivro, DataReserva) VALUES (:idUsuario, :idLivro, :GetDate())");
+                $statement = $pdo->prepare("INSERT INTO reserva (Usuario_idUsuario, Livro_idLivro, DataReserva) VALUES (:Usuario_idUsuario, :Livro_idLivro, :DataReserva)");
             }
-            $statement->bindValue(":nome",$reserva->getNome());
+            $statement->bindValue(":Usuario_idUsuario",$reserva->getIdUsuario());
+            $statement->bindValue(":Livro_idLivro",$reserva->getIdLivro());
+            $statement->bindValue(":DataReserva",date("Y-m-d H:i:s"));
 
-            //var_dump($statement->queryString);
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
                     return "<script> alert('Dados cadastrados com sucesso !'); </script>";
@@ -47,17 +48,17 @@ class reservaDAO
     }
 
 
-    public function atualizar($autor){
+    public function atualizar($reserva){
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT idAutor, nome FROM autor WHERE idAutor = :id");
-            $statement->bindValue(":id", $autor->getIdAutor());
+            $statement = $pdo->prepare("SELECT idReserva, Usuario_idUsuario, Livro_idLivro, DataReserva FROM reserva WHERE idReserva = :id");
+            $statement->bindValue(":id", $reserva->getIdReserva());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
-                $autor->setIdAutor($rs->idAutor);
-                $autor->setNome($rs->nome);
+                $reserva->setIdReserva($rs->idReserva);
+                $reserva->setIdLivro($rs->Livro_idLivro);
 
-                return $autor;
+                return $reserva;
             } else {
                 throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
             }
@@ -87,7 +88,10 @@ class reservaDAO
         /* Instrução de consulta para paginação com MySQL */
 
 
-        $sql = "SELECT * FROM reserva LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+        $sql = "SELECT r.idReserva, u.idUsuario, l.Titulo, r.DataReserva 
+                  FROM reserva r JOIN 
+                       livro l on r.Livro_idLivro = l.idLivro JOIN 
+                       usuario u on r.Usuario_idUsuario = u.idUsuario LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
 
 
         $statement = $pdo->prepare($sql);
@@ -130,19 +134,23 @@ class reservaDAO
      <thead>
        <tr style='text-transform: uppercase;' class='active'>
         <th style='text-align: center; font-weight: bolder;'>Codigo</th>
-        <th style='text-align: center; font-weight: bolder;'>Nome</th>
+        <th style='text-align: center; font-weight: bolder;'>Usuario</th>
+        <th style='text-align: center; font-weight: bolder;'>Livro</th>
+        <th style='text-align: center; font-weight: bolder;'>Data reserva</th>
         <th style='text-align: center; font-weight: bolder;' colspan='2'>Actions</th>
        </tr>
      </thead>
      <tbody>";
-            foreach ($dados as $autor):
+            foreach ($dados as $reserva):
 
 
                 echo "<tr>
-        <td style='text-align: center'>$autor->idAutor</td>
-        <td style='text-align: center'>$autor->nome</td>
-           <td style='text-align: center'><a href='?act=upd&id=$autor->idAutor' title='Alterar'><i class='ti-reload'></i></a></td>
-        <td style='text-align: center'><a href='?act=del&id=$autor->idAutor' title='Remover'><i class='ti-close'></i></a></td>
+        <td style='text-align: center'>$reserva->idReserva</td>
+        <td style='text-align: center'>$reserva->idUsuario</td>
+        <td style='text-align: center'>$reserva->Titulo</td>
+        <td style='text-align: center'>$reserva->DataReserva</td>
+           <td style='text-align: center'><a href='?act=upd&id=$reserva->idReserva' title='Alterar'><i class='ti-reload'></i></a></td>
+        <td style='text-align: center'><a href='?act=del&id=$reserva->idReserva' title='Remover'><i class='ti-close'></i></a></td>
        </tr>";
             endforeach;
             echo "

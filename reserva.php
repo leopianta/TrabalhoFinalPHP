@@ -16,35 +16,35 @@ $template->mainpanel();
 // Verificar se foi enviando dados via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = (isset($_POST["id"]) && $_POST["id"] != null) ? $_POST["id"] : "";
-    $nome = (isset($_POST["nome"]) && $_POST["nome"] != null) ? $_POST["nome"] : "";
+    $idLivro = (isset($_POST["fk_idLivro"]) && $_POST["fk_idLivro"] != null) ? $_POST["fk_idLivro"] : "";
 
 }else if (!isset($id)) {
     // Se não se não foi setado nenhum valor para variável $id
     $id = (isset($_GET["id"]) && $_GET["id"] != null) ? $_GET["id"] : "";
-    $nome = NULL;
-    $sigla = NULL;
+    $idLivro = NULL;
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
 
-    $autor = new autor($id,'','');
+    $reserva = new reserva($id,'','', '');
 
-    $resultado = $object->atualizar($autor);
-    $nome = $resultado->getNome();
+    $resultado = $object->atualizar($reserva);
+    $idLivro = $resultado->getIdLivro();
+    $DataReserva = $resultado->getDataReserva();
 }
 
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $nome != "")
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $idLivro != "")
 {
-    $autor = new autor($id, $nome);
-    $msg = $object->salvar($autor);
+    $reserva = new reserva($id, 2, $idLivro, getdate());
+    $msg = $object->salvar($reserva);
     $id = null;
-    $nome = NULL;
+    $idLivro = NULL;
 
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
-    $autor = new autor($id, '');
-    $msg = $object->remover($autor);
+    $reserva = new reserva($id, '', '', getdate());
+    $msg = $object->remover($reserva);
     $id = null;
 }
 

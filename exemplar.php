@@ -15,20 +15,18 @@ $template->mainpanel();
 // Verificar se foi enviando dados via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = (isset($_POST["id"]) && $_POST["id"] != null) ? $_POST["id"] : "";
-    $quant = (isset($_POST["quant"]) && $_POST["quant"] != null) ? $_POST["quant"] : "";
+    $ExemplarQtde = (isset($_POST["ExemplarQtde"]) && $_POST["ExemplarQtde"] != null) ? $_POST["ExemplarQtde"] : "";
     $AcervoDigitalSN = (isset($_POST["AcervoDigitalSN"]) && $_POST["AcervoDigitalSN"] != null) ? $_POST["AcervoDigitalSN"] : "";
-    $arquivo = (isset($_POST["arquivo"]) && $_POST["arquivo"] != null) ? $_POST["arquivo"] : "";
-    $emprestimo_consulta = (isset($_POST["emprestimo_consulta"]) && $_POST["emprestimo_consulta"] != null) ? $_POST["emprestimo_consulta"] : "";
+    $UploadArquivo = (isset($_POST["UploadArquivo"]) && $_POST["UploadArquivo"] != null) ? $_POST["UploadArquivo"] : "";
     $fk_idLivro = (isset($_POST["fk_idLivro"]) && $_POST["fk_idLivro"] != null) ? $_POST["fk_idLivro"] : "";
 
 
 } else if (!isset($id)) {
     // Se não se não foi setado nenhum valor para variável $id
     $id = (isset($_GET["id"]) && $_GET["id"] != null) ? $_GET["id"] : "";
-    $quant = NULL;
+    $ExemplarQtde = NULL;
     $AcervoDigitalSN = NULL;
-    $arquivo = NULL;
-    $emprestimo_consulta = NULL;
+    $UploadArquivo = NULL;
     $fk_idLivro = NULL;
 }
 
@@ -38,17 +36,16 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
     $exemplar = new exemplar($id, '', '', '', '', '');
 
     $resultado = $object->atualizar($exemplar);
-    $quant = $resultado->getQuant();
-    $AcervoDigitalSN = $resultado->getDigitalFisico();
-    $arquivo = $resultado->getArquivo();
-    $emprestimo_consulta = $resultado->getEmprestimoConsulta();
+    $ExemplarQtde = $resultado->getExemplarQtde();
+    $AcervoDigitalSN = $resultado->getAcervoDigitalSN();
+    $UploadArquivo = $resultado->getUploadArquivo();
     $fk_idLivro = $resultado->getFkIdLivro();
 
 }
 
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $quant != "" && $AcervoDigitalSN != ""
-    && $emprestimo_consulta != "" && $fk_idLivro != "") {
-    $size = $_FILES['arquivo']['size'];
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $ExemplarQtde != "" && $AcervoDigitalSN != ""
+    && $fk_idLivro != "") {
+    $size = 0;//$_FILES['arquivo']['size'];
 
     if ($size > 0) {
         $ext = strtolower(substr($_FILES['arquivo']['name'], -4)); //Pegando extensão do arquivo
@@ -60,13 +57,12 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $quant != "" && $Ac
         $novo_nome = "-";
     }
 
-    $exemplar = new exemplar($id, $quant, $digital_fisico, $novo_nome, $emprestimo_consulta, $fk_idLivro);
+    $exemplar = new exemplar($id, $UploadArquivo, $AcervoDigitalSN, $ExemplarQtde, $fk_idLivro);
     $msg = $object->salvar($exemplar);
     $id = null;
-    $quant = NULL;
-    $digital_fisico = NULL;
-    $novo_nome = NULL;
-    $emprestimo_consulta = NULL;
+    $UploadArquivo = NULL;
+    $AcervoDigitalSN = NULL;
+    $ExemplarQtde = NULL;
     $fk_idLivro = NULL;
 
 }
@@ -102,19 +98,19 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
 
 
                             Exemplares:
-                            <input class="form-control" type="number" name="quant" value="<?php
+                            <input class="form-control" type="number" name="ExemplarQtde" value="<?php
                             // Preenche o nome no campo nome com um valor "value"
-                            echo (isset($quant) && ($quant != null || $quant != "")) ? $quant : '';
+                            echo (isset($ExemplarQtde) && ($ExemplarQtde != null || $ExemplarQtde != "")) ? $ExemplarQtde : '';
                             ?>"/>
                             <br/>
 
 
                             Acervo Digital:
                             <select class="form-control" name="AcervoDigitalSN" id="AcervoDigitalSN">
-                                <option value="0" <?php if (isset($digital_fisico) && $digital_fisico == "0") echo 'selected' ?>>
+                                <option value="0" <?php if (isset($AcervoDigitalSN) && $AcervoDigitalSN == "0") echo 'selected' ?>>
                                     Sim
                                 </option>
-                                <option value="1" <?php if (isset($digital_fisico) && $digital_fisico == "1") echo 'selected' ?>>
+                                <option value="1" <?php if (isset($AcervoDigitalSN) && $AcervoDigitalSN == "1") echo 'selected' ?>>
                                     Não
                                 </option>
                             </select>
@@ -122,9 +118,9 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
 
                             <div id="divUpload" style="">
                                 Arquivo:
-                                <input class="form-control" type="file" name="arquivo" value="<?php
+                                <input class="form-control" type="file" name="UploadArquivo" value="<?php
                                 // Preenche o nome no campo nome com um valor "value"
-                                echo (isset($arquivo) && ($arquivo != null || $arquivo != "")) ? $arquivo : '';
+                                echo (isset($UploadArquivo) && ($UploadArquivo != null || $UploadArquivo != "")) ? $UploadArquivo : '';
                                 ?>"/>
                                 <br/>
                             </div>
