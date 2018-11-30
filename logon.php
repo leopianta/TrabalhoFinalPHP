@@ -3,7 +3,7 @@
 require_once "db/connection.php";
 
 session_start();
-$login = $_POST['login'];
+$login2 = $_POST['login'];
 $passwd = $_POST['password'];
 $idUsuario = null;
 $name = null;
@@ -14,18 +14,21 @@ $tipoUsuario = null;
 try {
 
     global $pdo;
-    $statement = $pdo->prepare("SELECT * FROM usuario WHERE Login = :login and Senha = :password; ");
-    $statement->bindValue(":login", $login);
+    $statement = $pdo->prepare("SELECT * FROM usuario WHERE Login=:login and Senha=:password");
+    $statement->bindValue(":login", $login2);
     $statement->bindValue(":password", sha1($passwd));
     if ($statement->execute()) {
         $rs = $statement->fetch(PDO::FETCH_OBJ);
-        
+
         $iduser = $rs->idUsuario;
-        $login = $rs->login;
-        $name = $rs->nome;
-        $pass = $rs->senha;
-        $tipoUsuario = $rs->perfil;
-        
+        $login = $rs->Login;
+        $name = $rs->Nome;
+        $pass = $rs->Senha;
+        $tipoUsuario = $rs->TipoUsuario_idTipoUsuario;
+
+
+
+
         if( $login != null and $pass != null)
         {
             $_SESSION['idUsuario'] = $idUsuario;
@@ -33,7 +36,7 @@ try {
             $_SESSION['password'] = $pass;
             $_SESSION['name'] = $name;
             $_SESSION['tipoUsuario'] = $tipoUsuario;
-            
+
             header('location:index.php');
         }
         else{

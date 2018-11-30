@@ -15,9 +15,9 @@ $template->mainpanel();
 
 $p = $_SESSION['tipoUsuario'];
 
-//perfil: 0:Adm, 1:User
+//perfil: 1:Adm, 0:User
 //Se o perfil for diferente de Adm e for digitado o endereço no browse, redireciona o usuario para o index.
-if($p != 0){
+if($p != 1){
      echo "<script>script:window.open('index.php', '_self');</script>";
 }
 // Verificar se foi enviando dados via POST
@@ -82,7 +82,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                     </div>
                     <div class='content table-responsive'>
                     <?php
-                        if($p == 1){
+                        if($p == 0){
                             $object->tabelapaginada();
                         }
                     ?>
@@ -93,45 +93,45 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             echo (isset($id) && ($id != null || $id != "")) ? $id : '';
                             ?>"/>
                             <Laber>Name</Laber>
-                            <input class="form-control" type="<?php echo ($p == 0) ? 'text' : 'hidden' ?>" size="50" name="nome" value="<?php
+                            <input class="form-control" type="<?php echo ($p == 1) ? 'text' : 'hidden' ?>" size="50" name="nome" value="<?php
                             // Preenche o nome no campo nome com um valor "value"
                             echo (isset($nome) && ($nome != null || $nome != "")) ? $nome : '';
                             ?>"/>
                             <br/>
                             <Laber>Login</Laber>
-                            <input class="form-control" type="<?php echo ($p == 0) ? 'text' : 'hidden' ?>" size="50" name="login" value="<?php
+                            <input class="form-control" type="<?php echo ($p == 1) ? 'text' : 'hidden' ?>" size="50" name="login" value="<?php
                             // Preenche o nome no campo nome com um valor "value"
                             echo (isset($login) && ($login != null || $login != "")) ? $login : '';
                             ?>" required/>
                             <br/>
                             <Laber>Senha</Laber>
-                            <input class="form-control" type="<?php echo ($p == 0) ? 'text' : 'hidden' ?>" size="10" name="senha" value="<?php
+                            <input class="form-control" type="<?php echo ($p == 1) ? 'password' : 'hidden' ?>" size="10" name="senha" value="<?php
                                    // Preenche o sigla no campo sigla com um valor "value"
                                    //echo (isset($senha) && ($senha != null || $senha != "")) ? $senha : '';
                                    ?>" required/>
                             <br/>
                             <Laber>Tipo de usuario</Laber>
                             <?php 
-                                if($p == 0){
+                                if($p == 1){
                                     echo "<select class='form-control' name='tipoUsuario'>
-                                    <option value='1'"; 
-                                    if(isset($tipoUsuario) && ($tipoUsuario != null || $tipoUsuario != ""))
-                                        echo (($tipoUsuario == 1) ? ' selected' : '');
-                                    echo ">Usuario</option>";
-                                    echo "<option value='0'"; 
+                                    <option value='0'";
                                     if(isset($tipoUsuario) && ($tipoUsuario != null || $tipoUsuario != ""))
                                         echo (($tipoUsuario == 0) ? ' selected' : '');
+                                    echo ">Usuario</option>";
+                                    echo "<option value='1'";
+                                    if(isset($tipoUsuario) && ($tipoUsuario != null || $tipoUsuario != ""))
+                                        echo (($tipoUsuario == 1) ? ' selected' : '');
                                     echo ">Administrador</option></select>";
                                 }
                             ?>
                             
                             <br/>
 
-                            <input class="btn btn-success" type="<?php echo ($p == 0) ? 'submit' : 'hidden' ?>" value="REGISTER">
+                            <input class="btn btn-success" type="<?php echo ($p == 1) ? 'submit' : 'hidden' ?>" value="REGISTER">
                                 <hr>
                                     </form>
                                 <?php
-                                    if($p == 0){   
+                                    if($p == 1){
                                         echo (isset($msg) && ($msg != null || $msg != "")) ? $msg : '';
                                         //chamada a paginação
                                         $object->tabelapaginada();

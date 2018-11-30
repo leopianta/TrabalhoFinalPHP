@@ -24,15 +24,16 @@ class reservaDAO
         global $pdo;
         try {
             if ($reserva->getIdReserva() != "") {
-                $statement = $pdo->prepare("UPDATE reserva SET Livro_idLivro=:Livro_idLivro WHERE idReserva = :id;");
+                $statement = $pdo->prepare("UPDATE reserva SET Livro_idLivro=:Livro_idLivro WHERE idReserva=:id");
                 $statement->bindValue(":id", $reserva->getIdReserva());
+                $statement->bindValue(":Livro_idLivro",$reserva->getIdLivro());
             } else {
                 $statement = $pdo->prepare("INSERT INTO reserva (Usuario_idUsuario, Livro_idLivro, DataReserva) VALUES (:Usuario_idUsuario, :Livro_idLivro, :DataReserva)");
+                $statement->bindValue(":Livro_idLivro",$reserva->getIdLivro());
+                $statement->bindValue(":Usuario_idUsuario",$reserva->getIdUsuario());
+                $statement->bindValue(":DataReserva",date("Y-m-d H:i:s"));
             }
-            $statement->bindValue(":Usuario_idUsuario",$reserva->getIdUsuario());
-            $statement->bindValue(":Livro_idLivro",$reserva->getIdLivro());
-            $statement->bindValue(":DataReserva",date("Y-m-d H:i:s"));
-
+            
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
                     return "<script> alert('Dados cadastrados com sucesso !'); </script>";

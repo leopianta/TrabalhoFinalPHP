@@ -1,15 +1,16 @@
 <?php
+
 class Template
 {
 
     function header()
     {
         session_start();
-        if((!isset ($_SESSION['login']) == true) and (!isset ($_SESSION['password']) == true))
+        if((!isset($_SESSION['login']) == true) and (!isset($_SESSION['password']) == true))
         {
             unset($_SESSION['login']);
             unset($_SESSION['password']);
-//            header('location:login.php');
+            header('location:login.php');
         }
         $logado = $_SESSION['name'];
 

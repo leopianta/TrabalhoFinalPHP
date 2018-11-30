@@ -32,11 +32,13 @@ class userDAO
             } else {
                 $statement = $pdo->prepare("INSERT INTO usuario (Nome, Login, Senha, TipoUsuario_idTipoUsuario) VALUES (:nome, :login, :senha, :TipoUsuario_idTipoUsuario)");
             }
+            $statement->bindValue(":nome", $user->getNome());
             $statement->bindValue(":login", $user->getLogin());
             $statement->bindValue(":senha", sha1($user->getSenha()));
-            $statement->bindValue(":nome", $user->getNome());
-            $statement->bindValue(":tipoUsuario", $user->getTipoUsuario());
-            
+            $statement->bindValue(":TipoUsuario_idTipoUsuario", $user->getTipoUsuario());
+
+            var_dump($statement);
+
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
                     return "<script> alert('Dados cadastrados com sucesso !'); </script>";

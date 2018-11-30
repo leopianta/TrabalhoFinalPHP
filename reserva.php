@@ -35,7 +35,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $idLivro != "")
 {
-    $reserva = new reserva($id, 2, $idLivro, getdate());
+    $reserva = new reserva($id, $_SESSION['login'], $idLivro, getdate());
     $msg = $object->salvar($reserva);
     $id = null;
     $idLivro = NULL;
@@ -77,7 +77,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                 if ($statement->execute()) {
                                     $result = $statement->fetchAll(PDO::FETCH_OBJ);
                                     foreach ($result as $rs) {
-                                        if ($rs->idLivro == $fk_idLivro) {
+                                        if ($rs->idLivro == $idLivro) {
                                             echo "<option value='$rs->idLivro' selected>$rs->Titulo</option>";
                                         } else {
                                             echo "<option value='$rs->idLivro'>$rs->Titulo</option>";

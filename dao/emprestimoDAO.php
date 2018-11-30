@@ -5,11 +5,11 @@ require_once 'classes/emprestimo.php';
 
 class emprestimoDAO
 {
-    public function remover($reserva){
+    public function remover($emprestimo){
         global $pdo;
         try {
-            $statement = $pdo->prepare("DELETE FROM reserva WHERE idReserva = :id");
-            $statement->bindValue(":id", $reserva->getIdReserva());
+            $statement = $pdo->prepare("DELETE FROM emprestimo WHERE idEmprestimo = :id");
+            $statement->bindValue(":id", $emprestimo->getIdEmprestimo());
             if ($statement->execute()) {
                 return "<script> alert('Registro foi excluído com êxito !'); </script>";
             } else {
@@ -20,16 +20,16 @@ class emprestimoDAO
         }
     }
 
-    public function salvar($reserva){
+    public function salvar($emprestimo){
         global $pdo;
         try {
-            if ($reserva->getIdReserva() != "") {
-                $statement = $pdo->prepare("UPDATE reserva SET Usuario_idUsuario=:idUsuario, Livro_idLivro=:idLivro, DataReserva:= DataReserva  WHERE idReserva = :id;");
-                $statement->bindValue(":id", $reserva->getIdReserva());
+            if ($emprestimo->getIdEmprestimo() != "") {
+                $statement = $pdo->prepare("UPDATE emprestimo SET Usuario_idUsuario=:idUsuario, Livro_idLivro=:idLivro, DataReserva:= DataReserva  WHERE idEmprestimo = :id;");
+                $statement->bindValue(":id", $emprestimo->getIdEmprestimo());
             } else {
                 $statement = $pdo->prepare("INSERT INTO reserva (Usuario_idUsuario, Livro_idLivro, DataReserva) VALUES (:idUsuario, :idLivro, :GetDate())");
             }
-            $statement->bindValue(":nome",$reserva->getNome());
+            $statement->bindValue(":nome",$emprestimo->getNome());
 
             //var_dump($statement->queryString);
             if ($statement->execute()) {
@@ -47,17 +47,17 @@ class emprestimoDAO
     }
 
 
-    public function atualizar($autor){
+    public function atualizar($emprestimo){
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT idAutor, nome FROM autor WHERE idAutor = :id");
-            $statement->bindValue(":id", $autor->getIdAutor());
+            $statement = $pdo->prepare("SELECT idAutor, nome FROM emprestimo WHERE idEmprestimo = :id");
+            $statement->bindValue(":id", $emprestimo->getIdAutor());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
-                $autor->setIdAutor($rs->idAutor);
-                $autor->setNome($rs->nome);
+                $emprestimo->setIdEmprestimo($rs->idEmprestimo);
+                $emprestimo->setNome($rs->nome);
 
-                return $autor;
+                return $emprestimo;
             } else {
                 throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
             }
@@ -87,7 +87,7 @@ class emprestimoDAO
         /* Instrução de consulta para paginação com MySQL */
 
 
-        $sql = "SELECT * FROM reserva LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+        $sql = "SELECT * FROM emprestimo LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
 
 
         $statement = $pdo->prepare($sql);
@@ -95,7 +95,7 @@ class emprestimoDAO
         $dados = $statement->fetchAll(PDO::FETCH_OBJ);
 
         /* Conta quantos registos existem na tabela */
-        $sqlContador = "SELECT COUNT(*) AS total_registros FROM reserva";
+        $sqlContador = "SELECT COUNT(*) AS total_registros FROM emprestimo";
         $statement = $pdo->prepare($sqlContador);
         $statement->execute();
         $valor = $statement->fetch(PDO::FETCH_OBJ);
@@ -130,7 +130,8 @@ class emprestimoDAO
      <thead>
        <tr style='text-transform: uppercase;' class='active'>
         <th style='text-align: center; font-weight: bolder;'>Codigo</th>
-        <th style='text-align: center; font-weight: bolder;'>Nome</th>
+        <th style='text-align: center; font-weight: bolder;'>Usuario</th>
+        <th style='text-align: center; font-weight: bolder;'>Livro</th>
         <th style='text-align: center; font-weight: bolder;' colspan='2'>Actions</th>
        </tr>
      </thead>
