@@ -12,6 +12,7 @@ class reserva
     private $idUsuario;
     private $idLivro;
     private $dataReserva;
+    private $emprestimoSN;
 
     /**
      * reserva constructor.
@@ -20,12 +21,13 @@ class reserva
      * @param $idLivro
      * @param $dataReserva
      */
-    public function __construct($idReserva, $idUsuario, $idLivro, $dataReserva)
+    public function __construct($idReserva, $idUsuario, $idLivro, $dataReserva, $emprestimoSN)
     {
         $this->idReserva = $idReserva;
         $this->idUsuario = $idUsuario;
         $this->idLivro = $idLivro;
         $this->dataReserva = $dataReserva;
+        $this->emprestimoSN = $emprestimoSN;
     }
     /**
      * @return mixed
@@ -91,6 +93,21 @@ class reserva
         $this->dataReserva = $dataReserva;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEmprestimoSN()
+    {
+        return $this->emprestimoSN;
+    }
+
+    /**
+     * @param mixed $dataReserva
+     */
+    public function setEmprestimoSN($emprestimoSN)
+    {
+        $this->emprestimoSN = $emprestimoSN;
+    }
 
 
 }

@@ -10,6 +10,9 @@ class emprestimoDAO
         try {
             $statement = $pdo->prepare("DELETE FROM emprestimo WHERE idEmprestimo = :id");
             $statement->bindValue(":id", $emprestimo->getIdEmprestimo());
+            $statement->bindValue(":Usuario_idUsuario", $emprestimo->getIdUsuario());
+            $statement->bindValue(":Exemplar_idExemplar", $emprestimo->getIdExemplar());
+            $statement->bindValue(":Reserva_idReserva", $emprestimo->getIdReserva());
             if ($statement->execute()) {
                 return "<script> alert('Registro foi excluído com êxito !'); </script>";
             } else {
@@ -24,14 +27,18 @@ class emprestimoDAO
         global $pdo;
         try {
             if ($emprestimo->getIdEmprestimo() != "") {
-                $statement = $pdo->prepare("UPDATE emprestimo SET Usuario_idUsuario=:idUsuario, Livro_idLivro=:idLivro, DataReserva:= DataReserva  WHERE idEmprestimo = :id;");
+                $statement = $pdo->prepare("UPDATE emprestimo SET Livro_idLivro=:idLivro WHERE idEmprestimo = :id;");
                 $statement->bindValue(":id", $emprestimo->getIdEmprestimo());
             } else {
-                $statement = $pdo->prepare("INSERT INTO reserva (Usuario_idUsuario, Livro_idLivro, DataReserva) VALUES (:idUsuario, :idLivro, :GetDate())");
+                $statement = $pdo->prepare("INSERT INTO emprestimo (Usuario_idUsuario, Exemplar_idExemplar, Reserva_idReserva, DataEmprestimo) VALUES (:Usuario_idUsuario, :Exemplar_idExemplar, :Reserva_idReserva, :DataEmprestimo)");
+                $statement->bindValue(":Exemplar_idExemplar",$emprestimo->getIdExemplar());
+                $statement->bindValue(":Reserva_idReserva",$emprestimo->getIdReserva());
+                $statement->bindValue(":Usuario_idUsuario",$emprestimo->getIdUsuario());
+                $statement->bindValue(":DataEmprestimo",date("Y-m-d H:i:s"));
             }
-            $statement->bindValue(":nome",$emprestimo->getNome());
 
-            //var_dump($statement->queryString);
+
+            var_dump($statement);
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
                     return "<script> alert('Dados cadastrados com sucesso !'); </script>";
@@ -50,12 +57,18 @@ class emprestimoDAO
     public function atualizar($emprestimo){
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT idAutor, nome FROM emprestimo WHERE idEmprestimo = :id");
-            $statement->bindValue(":id", $emprestimo->getIdAutor());
+            $statement = $pdo->prepare("SELECT * FROM emprestimo 
+                                                          WHERE idEmprestimo = :id");
+            $statement->bindValue(":id", $emprestimo->getIdEmprestimo());
+            $statement->bindValue(":Usuario_idUsuario", $emprestimo->getIdUsuario());
+            $statement->bindValue(":Exemplar_idExemplar", $emprestimo->getIdExemplar());
+            $statement->bindValue(":Reserva_idReserva", $emprestimo->getIdReserva());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
-                $emprestimo->setIdEmprestimo($rs->idEmprestimo);
-                $emprestimo->setNome($rs->nome);
+                $emprestimo->setIdEmprestimo($emprestimo->idEmprestimo);
+                $emprestimo->setIdUsuario($rs->Usuario_idUsuario);
+                $emprestimo->setIdExemplar($rs->Exemplar_idExemplar);
+                $emprestimo->setIdReserva($rs->Reserva_idReserva);
 
                 return $emprestimo;
             } else {
@@ -87,8 +100,10 @@ class emprestimoDAO
         /* Instrução de consulta para paginação com MySQL */
 
 
-        $sql = "SELECT * FROM emprestimo LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
-
+        $sql = "SELECT e.idEmprestimo, u.idUsuario, l.Titulo, e.DataEmprestimo
+                  FROM emprestimo e JOIN 
+                       livro l on r.Livro_idLivro = l.idLivro JOIN 
+                       usuario u on e.Usuario_idUsuario = u.idUsuario LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
 
         $statement = $pdo->prepare($sql);
         $statement->execute();
@@ -129,21 +144,21 @@ class emprestimoDAO
      <table class='table table-striped table-bordered'>
      <thead>
        <tr style='text-transform: uppercase;' class='active'>
-        <th style='text-align: center; font-weight: bolder;'>Codigo</th>
         <th style='text-align: center; font-weight: bolder;'>Usuario</th>
         <th style='text-align: center; font-weight: bolder;'>Livro</th>
+        <th style='text-align: center; font-weight: bolder;'>Data</th>
         <th style='text-align: center; font-weight: bolder;' colspan='2'>Actions</th>
        </tr>
      </thead>
      <tbody>";
-            foreach ($dados as $autor):
+            foreach ($dados as $emprestimo):
 
 
                 echo "<tr>
-        <td style='text-align: center'>$autor->idAutor</td>
-        <td style='text-align: center'>$autor->nome</td>
-           <td style='text-align: center'><a href='?act=upd&id=$autor->idAutor' title='Alterar'><i class='ti-reload'></i></a></td>
-        <td style='text-align: center'><a href='?act=del&id=$autor->idAutor' title='Remover'><i class='ti-close'></i></a></td>
+        <td style='text-align: center'>$emprestimo->idAutor</td>
+        <td style='text-align: center'>$emprestimo->nome</td>
+           <td style='text-align: center'><a href='?act=upd&id=$emprestimo->idEmprestimo' title='Alterar'><i class='ti-reload'></i></a></td>
+        <td style='text-align: center'><a href='?act=del&id=$emprestimo->idEmprestimo' title='Remover'><i class='ti-close'></i></a></td>
        </tr>";
             endforeach;
             echo "

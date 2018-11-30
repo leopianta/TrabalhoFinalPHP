@@ -17,6 +17,7 @@ $template->mainpanel();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = (isset($_POST["id"]) && $_POST["id"] != null) ? $_POST["id"] : "";
     $idLivro = (isset($_POST["fk_idLivro"]) && $_POST["fk_idLivro"] != null) ? $_POST["fk_idLivro"] : "";
+    $emprestimoSN = (isset($_POST["emprestimoSN"]) && $_POST["emprestimoSN"] != null) ? $_POST["emprestimoSN"] : "";
 
 }else if (!isset($id)) {
     // Se não se não foi setado nenhum valor para variável $id
@@ -26,26 +27,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
 
-    $reserva = new reserva($id,'','', '');
+    $reserva = new reserva($id,'','', '','');
 
     $resultado = $object->atualizar($reserva);
     $idLivro = $resultado->getIdLivro();
+    $EmprestimoSN = $resultado->getEmprestimoSN();;
     $DataReserva = $resultado->getDataReserva();
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $idLivro != "")
 {
-    $reserva = new reserva($id, $_SESSION['login'], $idLivro, getdate());
+    $reserva = new reserva($id, $_SESSION['login'], $idLivro, getdate(), $emprestimoSN);
     $msg = $object->salvar($reserva);
     $id = null;
     $idLivro = NULL;
+    $emprestimoSN = null;
 
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
-    $reserva = new reserva($id, '', '', getdate());
+    $reserva = new reserva($id, '', '', getdate(), '');
     $msg = $object->remover($reserva);
     $id = null;
+    $emprestimoSN = null;
 }
 
 ?>
@@ -87,6 +91,16 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                     throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
                                 }
                                 ?>
+                            </select>
+                            <br/>
+                            Emprestimo:
+                            <select class="form-control" name="emprestimoSN" id="emprestimoSN">
+                                <option value="0" <?php if (isset($emprestimoSN) && $emprestimoSN == "1") echo 'selected' ?>>
+                                    Sim
+                                </option>
+                                <option value="1" <?php if (isset($emprestimoSN) && $emprestimoSN == "0") echo 'selected' ?>>
+                                    Não
+                                </option>
                             </select>
                             <br/>
                             <input class="btn btn-success" type="submit" value="REGISTER">

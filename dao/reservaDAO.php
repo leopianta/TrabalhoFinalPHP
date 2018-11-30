@@ -23,17 +23,29 @@ class reservaDAO
     public function salvar($reserva){
         global $pdo;
         try {
+
+            $query = "SELECT idUsuario FROM usuario where Login=:id";
+            $statement = $pdo->prepare($query);
+            $statement->bindValue(":id", $reserva->getIdUsuario());
+            if ($statement->execute()){
+                $result = $statement->fetch(PDO::FETCH_OBJ);
+                $idUser = $result->idUsuario;
+            }
+
             if ($reserva->getIdReserva() != "") {
-                $statement = $pdo->prepare("UPDATE reserva SET Livro_idLivro=:Livro_idLivro WHERE idReserva=:id");
+                $statement = $pdo->prepare("UPDATE reserva SET Livro_idLivro=:Livro_idLivro, EmprestimoSN=:EmprestimoSN, DataEmprestimo=:DataEmprestimo WHERE idReserva=:id");
                 $statement->bindValue(":id", $reserva->getIdReserva());
                 $statement->bindValue(":Livro_idLivro",$reserva->getIdLivro());
+                $statement->bindValue(":EmprestimoSN",$reserva->getEmprestimoSN());
+                $statement->bindValue(":DataEmprestimo",date("Y-m-d H:i:s"));
             } else {
-                $statement = $pdo->prepare("INSERT INTO reserva (Usuario_idUsuario, Livro_idLivro, DataReserva) VALUES (:Usuario_idUsuario, :Livro_idLivro, :DataReserva)");
+                $statement = $pdo->prepare("INSERT INTO reserva (Usuario_idUsuario, Livro_idLivro, DataReserva, EmprestimoSN) VALUES (:Usuario_idUsuario,:Livro_idLivro,:DataReserva,:EmprestimoSN)");
+                $statement->bindValue(":Usuario_idUsuario",$idUser);
                 $statement->bindValue(":Livro_idLivro",$reserva->getIdLivro());
-                $statement->bindValue(":Usuario_idUsuario",$reserva->getIdUsuario());
                 $statement->bindValue(":DataReserva",date("Y-m-d H:i:s"));
+                $statement->bindValue(":EmprestimoSN",$reserva->getEmprestimoSN());
             }
-            
+
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
                     return "<script> alert('Dados cadastrados com sucesso !'); </script>";
@@ -52,7 +64,7 @@ class reservaDAO
     public function atualizar($reserva){
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT idReserva, Usuario_idUsuario, Livro_idLivro, DataReserva FROM reserva WHERE idReserva = :id");
+            $statement = $pdo->prepare("SELECT idReserva, Usuario_idUsuario, Livro_idLivro, DataReserva, DataEmprestimo FROM reserva WHERE idReserva = :id");
             $statement->bindValue(":id", $reserva->getIdReserva());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
@@ -89,7 +101,7 @@ class reservaDAO
         /* Instrução de consulta para paginação com MySQL */
 
 
-        $sql = "SELECT r.idReserva, u.idUsuario, l.Titulo, r.DataReserva 
+        $sql = "SELECT r.idReserva, u.idUsuario, l.Titulo, r.DataReserva, r.EmprestimoSN 
                   FROM reserva r JOIN 
                        livro l on r.Livro_idLivro = l.idLivro JOIN 
                        usuario u on r.Usuario_idUsuario = u.idUsuario LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
@@ -138,6 +150,7 @@ class reservaDAO
         <th style='text-align: center; font-weight: bolder;'>Usuario</th>
         <th style='text-align: center; font-weight: bolder;'>Livro</th>
         <th style='text-align: center; font-weight: bolder;'>Data reserva</th>
+        <th style='text-align: center; font-weight: bolder;'>Status</th>
         <th style='text-align: center; font-weight: bolder;' colspan='2'>Actions</th>
        </tr>
      </thead>
@@ -149,8 +162,12 @@ class reservaDAO
         <td style='text-align: center'>$reserva->idReserva</td>
         <td style='text-align: center'>$reserva->idUsuario</td>
         <td style='text-align: center'>$reserva->Titulo</td>
-        <td style='text-align: center'>$reserva->DataReserva</td>
-           <td style='text-align: center'><a href='?act=upd&id=$reserva->idReserva' title='Alterar'><i class='ti-reload'></i></a></td>
+        <td style='text-align: center'>$reserva->DataReserva</td>";
+                if ($reserva->EmprestimoSN == 0)
+                    echo"<td style='text-align: center'>Reservado</td>";
+                if ($reserva->EmprestimoSN == 1)
+                    echo"<td style='text-align: center'>Emprestado</td>";
+           echo"<td style='text-align: center'><a href='?act=upd&id=$reserva->idReserva' title='Alterar'><i class='ti-reload'></i></a></td>
         <td style='text-align: center'><a href='?act=del&id=$reserva->idReserva' title='Remover'><i class='ti-close'></i></a></td>
        </tr>";
             endforeach;

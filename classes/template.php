@@ -141,12 +141,6 @@ class Template
                         <i class=\"ti-archive\"></i>
                         <p>Reserva</p>
                     </a>
-                </li>
-                <li>
-                    <a href='emprestimo.php'>
-                        <i class=\"ti-archive\"></i>
-                        <p>Emprestimo</p>
-                    </a>
                 </li>";
         //if($_SESSION['perfil'] == 0){
         echo"<li>

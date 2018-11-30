@@ -8,6 +8,7 @@
 
 class emprestimo
 {
+    private $idEmprestimo;
     private $idReserva;
     private $idUsuario;
     private $idExemplar;
@@ -20,12 +21,27 @@ class emprestimo
      * @param $idExemplar
      * @param $dataEmprestimo
      */
-    public function __construct($idReserva, $idUsuario, $idExemplar, $dataEmprestimo)
+    public function __construct($idEmprestimo, $idReserva, $idUsuario, $idExemplar, $dataEmprestimo)
     {
+        $this->idEmprestimo = $idEmprestimo;
         $this->idReserva = $idReserva;
         $this->idUsuario = $idUsuario;
         $this->idExemplar = $idExemplar;
         $this->dataEmprestimo = $dataEmprestimo;
+    }
+
+
+    public function getIdEmprestimo()
+    {
+        return $this->idEmprestimo;
+    }
+
+    /**
+     * @param mixed $idEmprestimo
+     */
+    public function setIdEmprestimo($idEmprestimo)
+    {
+        $this->idEmprestimo = $idEmprestimo;
     }
 
 

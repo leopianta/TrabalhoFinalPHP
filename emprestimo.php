@@ -16,36 +16,38 @@ $template->mainpanel();
 // Verificar se foi enviando dados via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = (isset($_POST["id"]) && $_POST["id"] != null) ? $_POST["id"] : "";
-    $nome = (isset($_POST["nome"]) && $_POST["nome"] != null) ? $_POST["nome"] : "";
+    $idReserva = (isset($_POST["fk_idLivro"]) && $_POST["fk_idLivro"] != null) ? $_POST["fk_idLivro"] : "";
 
 }else if (!isset($id)) {
     // Se não se não foi setado nenhum valor para variável $id
     $id = (isset($_GET["id"]) && $_GET["id"] != null) ? $_GET["id"] : "";
-    $nome = NULL;
-    $sigla = NULL;
+    $idReserva = NULL;
+
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
 
-    $autor = new autor($id,'','');
+    $emprestimo = new emprestimo($id,'','');
 
-    $resultado = $object->atualizar($autor);
-    $nome = $resultado->getNome();
+    $resultado = $object->atualizar($emprestimo);
+    $idReserva = $resultado->getIdReserva();
 }
 
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $nome != "")
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save")
 {
-    $autor = new autor($id, $nome);
-    $msg = $object->salvar($autor);
+    $emprestimo = new emprestimo($id,$idReserva,$_SESSION['login'],$idExemplar);
+    $msg = $object->salvar($emprestimo);
     $id = null;
-    $nome = NULL;
-
+    $idReserva = Null;
+    $idExemplar = null;
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
-    $autor = new autor($id, '');
-    $msg = $object->remover($autor);
+    $emprestimo = new emprestimo($id,$idReserva,$_SESSION['login'],$idExemplar);
+    $msg = $object->remover($emprestimo);
     $id = null;
+    $idExemplar = null;
+    $idReserva = null;
 }
 
 ?>
@@ -64,7 +66,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
 
                         <form action="?act=save&id=" method="POST" name="form1">
 
-                            <input type="hidden" name="id" value="<?php
+                            <input type="hidden" name="idEmprestimo" value="<?php
                             // Preenche o id no campo id com um valor "value"
                             echo (isset($id) && ($id != null || $id != "")) ? $id : '';
                             ?>"/>
@@ -78,9 +80,9 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                     $result = $statement->fetchAll(PDO::FETCH_OBJ);
                                     foreach ($result as $rs) {
                                         if ($rs->idLivro == $fk_idLivro) {
-                                            echo "<option value='$rs->idLivro' selected>$rs->Titulo</option>";
+                                            echo "<option value='$rs->idReserva' selected>$rs->Titulo</option>";
                                         } else {
-                                            echo "<option value='$rs->idLivro'>$rs->Titulo</option>";
+                                            echo "<option value='$rs->idReserva'>$rs->Titulo</option>";
                                         }
                                     }
                                 } else {
