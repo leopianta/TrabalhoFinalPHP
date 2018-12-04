@@ -1,11 +1,45 @@
 <?php
 
 require_once "../db/connection.php";
-require_once "../classes/beneficiaries.php";
+//require_once "../classes/beneficiaries.php";
 
 class reportDAO
 {
+
     public function report01()
+    {
+        session_start();
+        global $pdo;
+        $dtInicio = $_SESSION['dtInicio'];
+        $dtFim = $_SESSION['dtFim'];
+        try {
+            $statement = $pdo->prepare('Select l.idLivro, l.Titulo, l.isbn, e.Exemplarcol as Exemplares,
+                                                           r.DataReserva, r.DataEmprestimo,
+                                                          (SELECT Count(re.EmprestimoSN) 
+                                                             FROM reserva re 
+                                                            WHERE re.Livro_idLivro = l.idLivro 
+                                                              AND re.EmprestimoSN = 0) as totalReservados,
+                                                          (SELECT Count(re.EmprestimoSN) 
+                                                             FROM reserva re 
+                                                            WHERE re.Livro_idLivro = l.idLivro 
+                                                            AND re.EmprestimoSN = 1) as totalEmprestados
+                                                      from livro l JOIN 
+                                                           reserva r on l.idLivro = r.Livro_idLivro JOIN 
+                                                           exemplar e on l.idLivro  = e.Livro_idLivro
+                                                     Where r.DataReserva between '.$dtInicio.' and '.$dtFim.'
+                                                     Group By l.idLivro');
+            if ($statement->execute()) {
+                $list = $statement->fetchAll(PDO::FETCH_OBJ);
+                return $list;
+            }else {
+                throw new PDOException("<script> alert('Erro: Não foi possível executar a declaração sql'); </script>");
+            }
+        }catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
+/*
+    public function report02()
     {
         global $pdo;
         try {
@@ -20,23 +54,7 @@ class reportDAO
             return "Erro: " . $erro->getMessage();
         }
     }
-    
-    public function report02()
-    {
-        global $pdo;
-        try {
-            $statement = $pdo->prepare('SELECT distinct (tb_beneficiaries.str_name_person), count(tb_payments.tb_beneficiaries_id_beneficiaries) count, tb_payments.int_month, tb_payments.int_year, sum(tb_payments.db_value) sum FROM tb_beneficiaries, tb_payments WHERE tb_beneficiaries_id_beneficiaries = id_beneficiaries GROUP BY tb_payments.tb_beneficiaries_id_beneficiaries, tb_payments.int_month,tb_payments.int_year');
-            if ($statement->execute()) {
-                $list = $statement->fetchAll(PDO::FETCH_OBJ);
-                return $list;
-            }else {
-                throw new PDOException("<script> alert('Erro: Não foi possível executar a declaração sql'); </script>");
-            }
-        }catch (PDOException $erro) {
-            return "Erro: " . $erro->getMessage();
-        }
-    }
-    
+
     public function report03()
     {
         global $pdo;
@@ -68,7 +86,7 @@ class reportDAO
             return "Erro: " . $erro->getMessage();
         }
     }
-    
+
     public function report05()
     {
         global $pdo;
@@ -84,7 +102,7 @@ class reportDAO
             return "Erro: " . $erro->getMessage();
         }
     }
-    
+
     public function report06()
     {
         global $pdo;
@@ -100,7 +118,7 @@ class reportDAO
             return "Erro: " . $erro->getMessage();
         }
     }
-    
+
     public function report07()
     {
         global $pdo;
@@ -116,7 +134,7 @@ class reportDAO
             return "Erro: " . $erro->getMessage();
         }
     }
-    
+*/
     public function dateNow(){
         date_default_timezone_set('America/Sao_Paulo');
         $obj = date('d-m-Y');

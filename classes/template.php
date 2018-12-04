@@ -159,6 +159,12 @@ class Template
                 </li>";
         //}
         echo"
+                <li>
+                    <a href='reports.php'>
+                        <i class=\"ti-files\"></i>
+                        <p>Relatórios</p>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>";

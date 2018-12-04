@@ -64,12 +64,13 @@ class reservaDAO
     public function atualizar($reserva){
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT idReserva, Usuario_idUsuario, Livro_idLivro, DataReserva, DataEmprestimo FROM reserva WHERE idReserva = :id");
+            $statement = $pdo->prepare("SELECT idReserva, Usuario_idUsuario, Livro_idLivro, DataReserva, DataEmprestimo, EmprestimoSN FROM reserva WHERE idReserva = :id");
             $statement->bindValue(":id", $reserva->getIdReserva());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
                 $reserva->setIdReserva($rs->idReserva);
                 $reserva->setIdLivro($rs->Livro_idLivro);
+                $reserva->setEmprestimoSN($rs->EmprestimoSN);
 
                 return $reserva;
             } else {

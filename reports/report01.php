@@ -21,31 +21,37 @@ session_start();
 
         $html = "<table border='2' cellspacing='3' cellpadding='5' >";
         $html .= "<tr>
-                    <th>ID BENEFICIARIES</th>
-                    <th>CODIGO NIS</th>
-                    <th>NOME DO BENEFICIARIES</th>
+                    <th>LIVRO</th>
+                    <th>ISBN</th>
+                    <th>EXEMPLARES</th>
+                    <th>RESERVADOS</th>
+                    <th>EMPRESTADOS</th>
+                    <th>DATA RESERVA</th>
+                    <th>DATA EMPRESTIMO</th>
                 </tr>";
         foreach ($listObjs as $var):
             $html.= "<tr>
-                        <td>$var->id_beneficiaries</td>
-                        <td>$var->str_nis</td>
-                        <td>$var->str_name_person</td>
+                        <td>$var->Titulo</td>
+                        <td>$var->isbn</td>
+                        <td>$var->Exemplares</td>
+                        <td>$var->totalReservados</td>
+                        <td>$var->totalEmprestados</td>
+                        <td>$var->DataReserva</td>
+                        <td>$var->DataEmprestimo</td>
                   </tr>";
         endforeach;
         $html .= "</table>";
 
         $mpdf=new \Mpdf\Mpdf();
         $mpdf->SetCreator('PDF_CREATOR');
-        $mpdf->SetAuthor('Tassio Sirqueira');
-        $mpdf->SetTitle('Relatório PDF com a lista de todos os beneficiários e seus respectivos dados em ordem alfabética');
-        $mpdf->SetSubject('EconomiC Analyzer');
-        $mpdf->SetKeywords('TCPDF, ECA');
+        $mpdf->SetAuthor('Leonardo');
+        $mpdf->SetTitle('Relatório PDF com a relação de Livros e as respectivas situações');
+        $mpdf->SetSubject('Store Library');
+        $mpdf->SetKeywords('TCPDF, StoreLib');
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->nbpgPrefix = ' de ';
         $mpdf->setFooter("Relatório gerado no dia {$dia} às {$hr} - Página {PAGENO}{nbpg}");
         $mpdf->WriteHTML($html);
-        $mpdf->Output('economicAnalyzer.pdf','I');
+        $mpdf->Output('StoreLibrary.pdf','I');
 
-        exit;
-        
 }

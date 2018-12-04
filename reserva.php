@@ -95,11 +95,11 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             <br/>
                             Emprestimo:
                             <select class="form-control" name="emprestimoSN" id="emprestimoSN">
-                                <option value="0" <?php if (isset($emprestimoSN) && $emprestimoSN == "1") echo 'selected' ?>>
-                                    Sim
+                                <option value="0" <?php if (isset($emprestimoSN) && $emprestimoSN == "0") echo 'selected' ?>>
+                                    Reservar
                                 </option>
-                                <option value="1" <?php if (isset($emprestimoSN) && $emprestimoSN == "0") echo 'selected' ?>>
-                                    Não
+                                <option value="1" <?php if (isset($emprestimoSN) && $emprestimoSN == "1") echo 'selected' ?>>
+                                    Emprestar
                                 </option>
                             </select>
                             <br/>
