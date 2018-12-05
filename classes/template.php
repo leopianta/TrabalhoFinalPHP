@@ -165,6 +165,12 @@ class Template
                         <p>Relatórios</p>
                     </a>
                 </li>
+                 <li>
+                    <a href='dashboard.php'>
+                        <i class=\"ti-files\"></i>
+                        <p>Dashboards</p>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>";

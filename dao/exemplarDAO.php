@@ -74,7 +74,25 @@ class exemplarDAO
         }
     }
 
-
+    public function countAll()
+    {
+        global $pdo;
+        try {
+            $statement = $pdo->prepare('SELECT count(*) AS countAll FROM exemplar;');
+            if ($statement->execute()) {
+                $rs = $statement->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($rs as $value) {
+                    if($value['countAll'])
+                        $countAll = $value['countAll'];
+                }
+                return $countAll;
+            }else {
+                throw new PDOException("<script> alert('Não foi possível executar a declaração sql'); </script>");
+            }
+        }catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
 
     public function tabelapaginada() {
 
