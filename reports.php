@@ -16,7 +16,7 @@ $template->mainpanel();
                 <div class='card'>
                     <div class='header'>
                         <h4 class='title'>Report</h4>
-                        <p class='category'>List of system reports</p>
+                        <p class='category'>Relatórios do sistema</p>
                     </div>
 
                     <div class='content table-responsive'>
@@ -25,13 +25,19 @@ $template->mainpanel();
                             <select class="form-control" name="reportsAvaliable">
                                 <option value="reportNulo">Select a report</option>
                                 <option value="report01">Gerencial</option>
+                                <option value="report02">Livros e exemplares</option>
+                                <option value="report03">Livros emprestados</option>
+                                <option value="report04">Livros reservados</option>
+                                <option value="report05">Usuários</option>
+                                <option value="report06">Livros em atraso</option>
                             </select>
                             <br/>
-                            Data Inicio:
+                            Data Inicial:
                             <input type="text" id="dataInicio" name="dataInicio"/>
-                            <br/>
+
                             Data Final:
                             <input type="text" id="dataFinal" name="dataFinal"/>
+                            <br/>
                             <br/>
 
                             <input class="btn btn-success" type="submit" value="GENERATE REPORT">

@@ -45,7 +45,8 @@ session_start();
         $mpdf=new \Mpdf\Mpdf();
         $mpdf->SetCreator('PDF_CREATOR');
         $mpdf->SetAuthor('Leonardo');
-        $mpdf->SetTitle('Relatório PDF com a relação de Livros e as respectivas situações');
+        $mpdf->SetTitle('Relatório PDF de todos os livros e o respectivo número de exemplares cadastrados
+no sistema');
         $mpdf->SetSubject('Store Library');
         $mpdf->SetKeywords('TCPDF, StoreLib');
         $mpdf->SetDisplayMode('fullpage');
