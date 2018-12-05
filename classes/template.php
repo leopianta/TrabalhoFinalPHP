@@ -142,35 +142,39 @@ class Template
                         <p>Reserva</p>
                     </a>
                 </li>";
-        //if($_SESSION['perfil'] == 0){
+        if($_SESSION['tipoUsuario'] == 1){
         echo"<li>
                     <a href='tipoUsuario.php'>
                         <i class=\"ti-money\"></i>
                         <p>Perfil de usuário</p>
                     </a>
                 </li>";
-        //}
-        //if($_SESSION['perfil'] == 0){
+        }
+        if($_SESSION['tipoUsuario'] == 1){
             echo"<li>
                     <a href='users.php'>
                         <i class=\"ti-user\"></i>
                         <p>Users</p>
                     </a>
                 </li>";
-        //}
+        }
         echo"
                 <li>
                     <a href='reports.php'>
                         <i class=\"ti-files\"></i>
                         <p>Relatórios</p>
                     </a>
-                </li>
-                 <li>
+                </li>";
+
+        if($_SESSION['tipoUsuario'] == 1){
+            echo"<li>
                     <a href='dashboard.php'>
-                        <i class=\"ti-files\"></i>
+                        <i class=\"ti - user\"></i>
                         <p>Dashboards</p>
                     </a>
-                </li>
+                </li>";
+        }
+        echo"
             </ul>
         </div>
     </div>";

@@ -8,10 +8,10 @@ class reportDAO
 
     public function report01()
     {
-        session_start();
+//        session_start();
         global $pdo;
-        $dtInicio = $_SESSION['dtInicio'];
-        $dtFim = $_SESSION['dtFim'];
+//        $dtInicio = $_SESSION['dtInicio'];
+//        $dtFim = $_SESSION['dtFim'];
         try {
             $statement = $pdo->prepare('Select l.idLivro, l.Titulo, l.isbn, e.Exemplarcol as Exemplares,
                                                            r.DataReserva, r.DataEmprestimo,
@@ -26,8 +26,7 @@ class reportDAO
                                                       from livro l JOIN 
                                                            reserva r on l.idLivro = r.Livro_idLivro JOIN 
                                                            exemplar e on l.idLivro  = e.Livro_idLivro
-                                                     Where r.DataReserva between '.$dtInicio.' and '.$dtFim.'
-                                                     Group By l.idLivro');
+                                                     Group By l.idLivro;');
 
 
             var_dump($statement);
