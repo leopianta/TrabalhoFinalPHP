@@ -23,6 +23,7 @@ FROM
     reserva r ON l.idLivro = r.Livro_idLivro
 WHERE
     r.emprestimoSN = 1
+  AND month(Now()) - Month(DataReserva) <= 3
 GROUP BY l.idLivro;";
 
 $statement = $pdo->prepare($query);

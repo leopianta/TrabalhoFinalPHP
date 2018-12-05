@@ -21,10 +21,12 @@ FROM
     livro l
         JOIN
     reserva r ON l.idLivro = r.Livro_idLivro
+		JOIN
+	categoria c ON l.Categoria_idCategoria = c.idCategoria
 WHERE
-      r.emprestimoSN = 0
+    r.emprestimoSN = 1
   AND month(Now()) - Month(DataReserva) <= 3
-GROUP BY l.idLivro;";
+GROUP BY l.Categoria_idCategoria;";
 
 $statement = $pdo->prepare($query);
 $statement->execute();

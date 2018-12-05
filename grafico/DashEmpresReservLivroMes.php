@@ -18,6 +18,7 @@ FROM
     livro l
         JOIN
     reserva r ON l.idLivro = r.Livro_idLivro
+WHERE month(Now()) - Month(DataReserva) = 1
 GROUP BY l.idLivro;";
 
 $statement = $pdo->prepare($query);

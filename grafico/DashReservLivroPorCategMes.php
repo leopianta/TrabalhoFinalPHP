@@ -2,29 +2,28 @@
 
 require_once '../vendor/davefx/phplot/phplot/phplot.php';
 require_once "../db/connection.php";
+require_once '../grafico/Dash_images.php';
 
-#Instancia o objeto e setando o tamanho do grafico na tela
+//Instancia o objeto e setando o tamanho do grafico na tela
 $grafico = new PHPlot(600 ,600);
 
-//formato do grafico
-$grafico->SetFileFormat("png");
-
-#Indicamos o títul do gráfico e o título dos dados no eixo X e Y do mesmo
+//Indicamos o títul do gráfico e o título dos dados no eixo X e Y
 $grafico->SetTitle("");
 $grafico->SetXTitle("mes");
 $grafico->SetYTitle("total");
 
-//select de pesquisa
 $query = "SELECT 
     Count(l.idLivro) valor, Month(r.DataEmprestimo) as mes
 FROM
     livro l
         JOIN
     reserva r ON l.idLivro = r.Livro_idLivro
+		JOIN
+	categoria c ON l.Categoria_idCategoria = c.idCategoria
 WHERE
-      r.emprestimoSN = 0
+    r.emprestimoSN = 0
   AND month(Now()) - Month(DataReserva) <= 3
-GROUP BY l.idLivro;";
+GROUP BY l.Categoria_idCategoria;";
 
 $statement = $pdo->prepare($query);
 $statement->execute();
@@ -47,8 +46,18 @@ if(isset($resultado)) {
 
 $grafico->SetDataValues($data);
 
-//gráfico em barras
+#Neste caso, usariamos o gráfico em barras
 $grafico->SetPlotType("bars");
 
-//Exibimos o gráfico
+$grafico->SetPrecisionY(1);
+
+//Disable image output
+$grafico->SetPrintImage(false);
+//Draw the graph
 $grafico->DrawGraph();
+
+$pdf = new PDF_MemImage();
+$pdf->AddPage();
+$pdf->GDImage($grafico->img,30,20,140);
+$pdf->Output();
+return $grafico->EncodeImage('base64');

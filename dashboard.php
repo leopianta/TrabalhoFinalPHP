@@ -184,4 +184,44 @@ $template->mainpanel();
             </div>
         </div>
     </div>
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Livros reservados por categoria</h4>
+                <!--                <p class="category">Ultimos 3 Meses</p>-->
+            </div>
+            <div class="content">
+                <div id="chartHours" >
+                    <img alt="" src="grafico/DashReservLivroPorCategMesImg.php" title="">
+                </div>
+                <div class="footer">
+                    <hr>
+                    <div class="stats">
+                        <a href="grafico/DashReservLivroPorCategMes.php" target="_blank">  Imprimir PDF</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Livros emprestados por categoria</h4>
+                <!--                <p class="category">Ultimos 3 Meses</p>-->
+            </div>
+            <div class="content">
+                <div id="chartHours" >
+                    <img alt="" src="grafico/DashEmprestLivroPorCategMesImg.php" title="">
+                </div>
+                <div class="footer">
+                    <hr>
+                    <div class="stats">
+                        <a href="grafico/DashEmprestLivroPorCategMes.php" target="_blank">  Imprimir PDF</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
